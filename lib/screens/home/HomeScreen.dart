@@ -10,6 +10,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _counter = 0;
+  int _tempCounter = 0;
 
   void _incrementCounter() {
     setState(() {
@@ -18,7 +19,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _resetCouter() {
-    setState(() => {_counter = 0});
+    setState(() {
+      _tempCounter = _counter;
+      _counter = 0;
+    });
+  }
+
+  void undoCounter() {
+    setState(() {
+      _counter = _tempCounter;
+      _tempCounter = 0;
+    });
   }
 
   @override
@@ -27,6 +38,24 @@ class _HomeScreenState extends State<HomeScreen> {
       return (_counter <= 1)
           ? "You have pushed the button this $_counter time"
           : "You have pushed the button this $_counter times";
+    }
+
+    void _showRefreshToast() {
+      ScaffoldMessenger.of(context).showSnackBar(
+        (_counter == 0)
+            ? const SnackBar(
+                content: Text("Nothing To Refresh"),
+              )
+            : SnackBar(
+                content: const Text("Counter Refreshed !!!"),
+                action: SnackBarAction(
+                  label: 'Undo',
+                  onPressed: () {
+                    undoCounter();
+                  },
+                ),
+              ),
+      );
     }
 
     return Scaffold(
@@ -41,9 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               Text(
                 _showMessage(),
-              ),
-              Text(
-                'vukm',
                 style: Theme.of(context).textTheme.headline6,
               ),
             ],
@@ -52,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButton: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
           FloatingActionButton(
             onPressed: () {
+              _showRefreshToast();
               _resetCouter();
             },
             child: const Icon(Icons.refresh),
