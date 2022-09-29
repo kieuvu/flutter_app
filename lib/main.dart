@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/home/HomeScreen.dart';
+import 'package:flutter_app/screen/home/HomeScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(title: 'Vukm Flutter'),
+      home: const HomeScreen(title: 'Counter'),
     );
   }
 }
