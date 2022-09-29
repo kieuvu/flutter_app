@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screen/timer/TimerScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -32,32 +33,32 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  String showMessage() {
+    return (_counter <= 1)
+        ? "You have pushed the button this $_counter time"
+        : "You have pushed the button this $_counter times";
+  }
+
+  void showRefreshToast() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      (_counter == 0)
+          ? const SnackBar(
+              content: Text("Nothing To Refresh"),
+            )
+          : SnackBar(
+              content: const Text("Counter Refreshed !!!"),
+              action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () {
+                  undoCounter();
+                },
+              ),
+            ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    String _showMessage() {
-      return (_counter <= 1)
-          ? "You have pushed the button this $_counter time"
-          : "You have pushed the button this $_counter times";
-    }
-
-    void _showRefreshToast() {
-      ScaffoldMessenger.of(context).showSnackBar(
-        (_counter == 0)
-            ? const SnackBar(
-                content: Text("Nothing To Refresh"),
-              )
-            : SnackBar(
-                content: const Text("Counter Refreshed !!!"),
-                action: SnackBarAction(
-                  label: 'Undo',
-                  onPressed: () {
-                    undoCounter();
-                  },
-                ),
-              ),
-      );
-    }
-
     return Scaffold(
         appBar: AppBar(
           // Here we take the value from the HomeScreen object that was created by
@@ -69,8 +70,17 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                _showMessage(),
+                showMessage(),
                 style: Theme.of(context).textTheme.headline6,
+              ),
+              ElevatedButton(
+                child: const Text('Open timer'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TimerScreen()),
+                  );
+                },
               ),
             ],
           ),
@@ -78,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButton: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
           FloatingActionButton(
             onPressed: () {
-              _showRefreshToast();
+              showRefreshToast();
               _resetCouter();
             },
             child: const Icon(Icons.refresh),
